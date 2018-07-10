@@ -9,12 +9,6 @@ import java.util.Map;
 
 public class TreeController {
 
-    public Node<String> getTree(final int levels) {
-        Node tree = createTree(getAlphabetLetter(), new ArrayList<>());
-        generateRootedTree(levels,tree);
-        return tree;
-    }
-
     public Map<String, Object> getResults(final int levels) {
         Map<String, Object> treeMap = new HashMap<>();
         Node<String> tree = getTree(levels);
@@ -24,13 +18,20 @@ public class TreeController {
         return treeMap;
     }
 
-    public String getResultsByHierarchy(Node<String> tree) {
+    private Node<String> getTree(final int levels) {
+        Node tree = createTree(getAlphabetLetter(), new ArrayList<>());
+        generateRootedTree(levels,tree);
+        return tree;
+    }
+
+
+    private String getResultsByHierarchy(Node<String> tree) {
         StringBuilder result = new StringBuilder();
         getHierarchicalOrder(result, tree);
         return result.toString();
     }
 
-    public String getResultsByGeneration(Node<String> tree) {
+    private String getResultsByGeneration(Node<String> tree) {
         Map<Integer, List<Node>> rowMap = new HashMap<>();
         mapTreeLevel(tree, true, rowMap, null);
         return getGenerationalOrder(rowMap);
@@ -42,7 +43,7 @@ public class TreeController {
         return String.valueOf(alphabet.charAt(randomIndex));
     }
 
-    public void generateRootedTree(int levels, Node root) {
+    private void generateRootedTree(int levels, Node root) {
         while (0 < levels--) {
             int childrenCount = 0;
             int numberOfChildren = (int) Math.floor(Math.random() * 5);
@@ -58,7 +59,7 @@ public class TreeController {
         }
     }
 
-    public Node createTree(String root, List<String> children) {
+    private Node createTree(String root, List<String> children) {
         Node rootNode = new Node(root, null);
         for (String child : children) {
             Node childNode = new Node(child, rootNode);
@@ -67,7 +68,7 @@ public class TreeController {
         return rootNode;
     }
 
-    public void getHierarchicalOrder(StringBuilder result, Node tree) {
+    private void getHierarchicalOrder(StringBuilder result, Node tree) {
         String parent = tree.getName();
         result.append(parent.toUpperCase());
         List<Node> children = tree.getChildren();
@@ -81,7 +82,7 @@ public class TreeController {
         }
     }
 
-    public String getGenerationalOrder(Map<Integer, List<Node>> rowMap) {
+    private String getGenerationalOrder(Map<Integer, List<Node>> rowMap) {
         StringBuilder result = new StringBuilder();
         for (Map.Entry<Integer, List<Node>> row : rowMap.entrySet()) {
             for (Node node : row.getValue()) {
@@ -91,7 +92,7 @@ public class TreeController {
         return result.toString().substring(0, result.lastIndexOf(" "));
     }
 
-    public void mapTreeLevel(Node root, boolean isRoot, Map<Integer, List<Node>> rowMap, List<Node> trees) {
+    private void mapTreeLevel(Node root, boolean isRoot, Map<Integer, List<Node>> rowMap, List<Node> trees) {
         Integer row = rowMap.size();
         List<Node> nodes = new ArrayList<>();
         if (isRoot) {
